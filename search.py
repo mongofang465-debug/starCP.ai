@@ -1,19 +1,13 @@
 import streamlit as st
 from openai import OpenAI
-from dotenv import load_dotenv
-import os
 
-# 读取 .env
-load_dotenv()
-
+# Streamlit Cloud Secrets 管理 Key，不需要 load_dotenv
 client = OpenAI(
-    api_key=st.secrets["OPENROUTER_API_KEY"], 
+    api_key=st.secrets["OPENROUTER_API_KEY"],  # ✅ 中括号
     base_url="https://openrouter.ai/api/v1"
 )
 
-
 def search_person(name):
-
     prompt = f"""
 你是一个信息整理助手。
 
@@ -50,12 +44,10 @@ def search_person(name):
 - 不确定写未知
 - 仅基于公开信息
 """
-
     response = client.chat.completions.create(
         model="openai/gpt-4o-mini",
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
+        messages=[{"role": "user", "content": prompt}]
     )
 
-    return response.choices[0].message.content
+    # 防止 None 报错
+    return response.choices[0].message.get("content", "")
