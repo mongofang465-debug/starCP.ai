@@ -50,4 +50,4 @@ def search_person(name):
     )
 
     # 防止 None 报错
-    return response.choices[0].message.get("content", "")
+    return response.choices[0].message.content
